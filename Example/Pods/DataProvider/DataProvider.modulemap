@@ -1,6 +1,0 @@
-framework module DataProvider {
-  umbrella header "DataProvider-umbrella.h"
-
-  export *
-  module * { export * }
-}
