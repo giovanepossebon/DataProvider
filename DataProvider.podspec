@@ -7,11 +7,11 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/Giovane Possebon/DataProvider'
+  s.homepage         = 'https://github.com/giovanepossebon/DataProvider'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Giovane Possebon' => 'giovane.possebon@involves.com.br' }
-  s.source           = { :git => 'https://github.com/Giovane Possebon/DataProvider.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/giovanepossebon/DataProvider.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
