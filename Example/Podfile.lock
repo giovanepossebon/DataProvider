@@ -32,7 +32,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DataProvider: 748c9ace18f799c42e68e7a299e132080d01bdc5
+  DataProvider: 87fe36f84564b58e447826fee9c5e2423ccb5dc9
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   Realm: e12c9c2387d05c5bba3a9c394838f5870e85763b

@@ -12,7 +12,7 @@ TODO: Add long description of the pod here.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Giovane Possebon' => 'giovane.possebon@involves.com.br' }
   s.source           = { :git => 'https://github.com/giovanepossebon/DataProvider.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/giovanepossebon'
 
   s.ios.deployment_target = '10.0'
 

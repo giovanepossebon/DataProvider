@@ -95,9 +95,9 @@ private class TimelineAPISpy: TimelineAPIContract {
         self.success = success
     }
 
-    func fetchTimelineEvents(completion: ([TimelineEvent], Error?) -> ()) {
+    func fetchTimelineEvents(completion: ([TimelineEventModel], Error?) -> ()) {
         if success {
-            completion([TimelineEvent(id: 0, relatedEventId: 0, title: "title value")], nil)
+            completion([TimelineEventModel(id: 0, relatedEventId: 0, title: "title value")], nil)
         } else {
             completion([], CustomError(description: "error value"))
         }
