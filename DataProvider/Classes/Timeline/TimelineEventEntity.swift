@@ -1,10 +1,10 @@
 import RealmSwift
 
-class TimelineEventEntity: Object {
+public class TimelineEventEntity: Object {
      @objc dynamic var id = 0
      @objc dynamic var title = ""
     
-    convenience init(id: Int, title: String) {
+    public convenience init(id: Int, title: String) {
         self.init()
         self.id = id
         self.title = title

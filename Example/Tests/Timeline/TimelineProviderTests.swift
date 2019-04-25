@@ -2,8 +2,6 @@ import Quick
 import Nimble
 import DataProvider
 
-@testable import DataProvider
-
 final class TimelineProviderTests: QuickSpec {
 
     override func spec() {

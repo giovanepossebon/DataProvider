@@ -1,6 +1,6 @@
 import RealmSwift
 
-protocol TimelineDBContract {
+public protocol TimelineDBContract {
     func getEvents(for id: Int) -> [TimelineEventEntity]
 }
 

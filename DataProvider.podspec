@@ -18,15 +18,13 @@ TODO: Add long description of the pod here.
 
   s.module_name = 'DataProvider'
   s.swift_version = '5.0'
+  s.source_files = 'DataProvider/Classes/General/**/*'
   
   s.dependency 'RealmSwift'
   
   s.subspec 'Timeline' do |ss|
     ss.source_files = 'DataProvider/Classes/Timeline/*'
   end
-  
-  s.subspec 'Core' do |ss|
-    ss.source_files = 'DataProvider/Classes/Core/*'
-  end
+
   
 end

@@ -12,7 +12,7 @@ public final class TimelineProvider: TimelineProviderProtocol {
         self.init(id: id, api: TimelineAPI(), db: TimelineDB())
     }
     
-    init(id: Int, api: TimelineAPIContract = TimelineAPI(), db: TimelineDBContract = TimelineDB()) {
+    public init(id: Int, api: TimelineAPIContract, db: TimelineDBContract) {
         self.id = id
         self.api = api
         self.db = db
