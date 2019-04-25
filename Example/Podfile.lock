@@ -1,8 +1,8 @@
 PODS:
-  - DataProvider (0.1.0):
-    - DataProvider/Timeline (= 0.1.0)
+  - DataProvider (0.1.1):
+    - DataProvider/Timeline (= 0.1.1)
     - RealmSwift
-  - DataProvider/Timeline (0.1.0):
+  - DataProvider/Timeline (0.1.1):
     - RealmSwift
   - Nimble (8.0.1)
   - Quick (2.1.0)
@@ -29,7 +29,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DataProvider: cc43292b1ed875e70f9fdcdb8aa9c8d81d01997a
+  DataProvider: 39b6689e52a53b86b2c2083c956518fe0252b78c
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   Realm: e12c9c2387d05c5bba3a9c394838f5870e85763b
