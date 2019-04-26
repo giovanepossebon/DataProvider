@@ -1,5 +1,5 @@
 public protocol TimelineProviderProtocol: class {
-    func getTimeline(completion: ([TimelineEventModel]?, CustomError?) -> ())
+    func getTimeline(completion: @escaping ([TimelineEventModel]?, CustomError?) -> ())
 }
 
 public final class TimelineProvider: TimelineProviderProtocol {
@@ -18,17 +18,15 @@ public final class TimelineProvider: TimelineProviderProtocol {
         self.db = db
     }
     
-    public func getTimeline(completion: ([TimelineEventModel]?, CustomError?) -> ()) {
-        let storedEvents = db.getEvents(for: 0)
-        
-        api.fetchTimelineEvents { events, error in
-            guard error == nil else {
-                completion(storedEvents.compactMap { TimelineEventModel(id: $0.id, relatedEventId: 0, title: $0.title) }, error as? CustomError)
-                return
-            }
+    public func getTimeline(completion: @escaping ([TimelineEventModel]?, CustomError?) -> ()) {
+        api.fetchTimelineEvents { response in
             
-            TimelineEventEntity.save(events: events)
-            completion(events, nil)
+        switch response.result {
+            case .success:
+                completion(response.data, nil)
+            case .error(message: let error):
+                completion(nil, CustomError(description: error))
+            }
         }
     }
  

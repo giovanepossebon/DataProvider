@@ -1,14 +1,34 @@
 import Foundation
 
 public protocol TimelineAPIContract {
-    func fetchTimelineEvents(completion: ([TimelineEventModel], Error?) -> ())
+    func fetchTimelineEvents(callback: @escaping  (Response<[TimelineEventModel]>) -> ())
 }
 
 public struct TimelineAPI: TimelineAPIContract {
     
-    public func fetchTimelineEvents(completion: ([TimelineEventModel], Error?) -> ()) {
-        return completion([TimelineEventModel(id: 0, relatedEventId: 0, title: "Teste1"),
-                           TimelineEventModel(id: 1, relatedEventId: 0, title: "Teste2")], nil)
+    public func fetchTimelineEvents(callback: @escaping (Response<[TimelineEventModel]>) -> ()) {
+        
+        let url = URL(string: "url")
+        
+        Network.request(url!) { response in
+            switch response.result {
+            case .success:
+                guard let data = response.data else {
+                    callback(Response<[TimelineEventModel]>(data: [], result: .error(message: "Problem with data")))
+                    return
+                }
+                
+                do {
+                    let events = try JSONDecoder().decode([TimelineEventModel].self, from: data)
+                    callback(Response<[TimelineEventModel]>(data: events, result: .success))
+                } catch {
+                    callback(Response<[TimelineEventModel]>(data: [], result: .error(message: "Problem with serialization")))
+                }
+            case .failure(let error):
+                callback(Response<[TimelineEventModel]>(data: [], result: .error(message: error.localizedDescription)))
+            }
+        }
+        
     }
     
 }

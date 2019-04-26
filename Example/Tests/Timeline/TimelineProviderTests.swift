@@ -46,7 +46,7 @@ final class TimelineProviderTests: QuickSpec {
                         
                         it("it should return offline data and internet missing error") {
                             sut_provider.getTimeline { events, error in
-                                expect(events?.isEmpty).toEventually(beFalse())
+                                expect(events).toEventually(beNil())
                                 expect(error?.description) == "error value"
                             }
                         }
@@ -61,7 +61,7 @@ final class TimelineProviderTests: QuickSpec {
                         
                         it("it should return empty and error") {
                             sut_provider.getTimeline { events, error in
-                                expect(events?.isEmpty).toEventually(beTrue())
+                                expect(events).toEventually(beNil())
                                 expect(error?.description) == "error value"
                             }
                         }
@@ -88,16 +88,16 @@ private class TimelineDBSpy: TimelineDBContract {
 
 private class TimelineAPISpy: TimelineAPIContract {
     let success: Bool
-
+    
     init(success: Bool) {
         self.success = success
     }
-
-    func fetchTimelineEvents(completion: ([TimelineEventModel], Error?) -> ()) {
+    
+    func fetchTimelineEvents(callback: @escaping (Response<[TimelineEventModel]>) -> ()) {
         if success {
-            completion([TimelineEventModel(id: 0, relatedEventId: 0, title: "title value")], nil)
+            callback(Response<[TimelineEventModel]>(data: [TimelineEventModel(id: 0, relatedEventId: 0, title: "title value")], result: .success))
         } else {
-            completion([], CustomError(description: "error value"))
+            callback(Response<[TimelineEventModel]>(data: [], result: .error(message: "error value")))
         }
     }
 }

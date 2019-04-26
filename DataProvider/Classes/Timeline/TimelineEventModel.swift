@@ -1,4 +1,4 @@
-public struct TimelineEventModel {
+public struct TimelineEventModel: Codable {
     public let id: Int
     public let relatedEventId: Int
     public let title: String
