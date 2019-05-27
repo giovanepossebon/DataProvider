@@ -14,7 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		DA2EC7814449B8D33587A5D1 /* Pods_DataProvider_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1223F0F262C3232529846C4 /* Pods_DataProvider_Example.framework */; };
-		DABC8E312271E55700B9FFF4 /* TimelineProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABC8E2D2271E55700B9FFF4 /* TimelineProviderTests.swift */; };
+		DA4C4990229C7D6200850522 /* RepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4C498F229C7D6200850522 /* RepositoryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +44,7 @@
 		B0CAD6614BDF3B1554DC289A /* Pods-DataProvider_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DataProvider_Tests.release.xcconfig"; path = "Target Support Files/Pods-DataProvider_Tests/Pods-DataProvider_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		C477778E1494EB9D9CA9C556 /* Pods-DataProvider_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DataProvider_Example.debug.xcconfig"; path = "Target Support Files/Pods-DataProvider_Example/Pods-DataProvider_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D18197A0F158F5F2A4650602 /* DataProvider.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DataProvider.podspec; path = ../DataProvider.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		DABC8E2D2271E55700B9FFF4 /* TimelineProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineProviderTests.swift; sourceTree = "<group>"; };
+		DA4C498F229C7D6200850522 /* RepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTests.swift; sourceTree = "<group>"; };
 		F1223F0F262C3232529846C4 /* Pods_DataProvider_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DataProvider_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCA72CB2E116E7AB8476616F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,8 +135,8 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				DABC8E2C2271E55700B9FFF4 /* Timeline */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				DA4C498F229C7D6200850522 /* RepositoryTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -157,14 +157,6 @@
 				6F835162654964C2EC1C10B3 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
-			sourceTree = "<group>";
-		};
-		DABC8E2C2271E55700B9FFF4 /* Timeline */ = {
-			isa = PBXGroup;
-			children = (
-				DABC8E2D2271E55700B9FFF4 /* TimelineProviderTests.swift */,
-			);
-			path = Timeline;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -226,7 +218,7 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -376,7 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DABC8E312271E55700B9FFF4 /* TimelineProviderTests.swift in Sources */,
+				DA4C4990229C7D6200850522 /* RepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +551,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A03B0BF00F45230964D0ABC /* Pods-DataProvider_Tests.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -572,6 +565,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DataProvider_Example.app/DataProvider_Example";
@@ -582,6 +576,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B0CAD6614BDF3B1554DC289A /* Pods-DataProvider_Tests.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

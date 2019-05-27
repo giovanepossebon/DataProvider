@@ -14,9 +14,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        TimelineProvider(id: 0).getTimeline { timeline, error in
-            print(timeline)
-        }
     }
 
 }

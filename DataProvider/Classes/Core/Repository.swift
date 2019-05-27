@@ -3,6 +3,7 @@ import RealmSwift
 public protocol Repository {
     associatedtype EntityType
     
+    init(realm: Realm)
     func all() -> [EntityType]
     func insert(item: EntityType)
 }
@@ -10,9 +11,11 @@ public protocol Repository {
 public class RealmRepository<T>: Repository where T: RealmEntity, T: Object, T.EntityType: Entity {
     typealias RealmEntityType = T
     
-    private let realm = try! Realm()
+    private let realm: Realm
     
-    public init() {}
+    public required init(realm: Realm) {
+        self.realm = realm
+    }
     
     public func insert(item: T.EntityType) {
         try? realm.write {
