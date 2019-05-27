@@ -19,16 +19,12 @@ public final class TimelineProvider: TimelineProviderProtocol {
     }
     
     public func getTimeline(completion: @escaping ([TimelineEventModel]?, CustomError?) -> ()) {
-        api.fetchTimelineEvents { response in
-            
-        switch response.result {
-            case .success:
-                completion(response.data, nil)
-            case .error(message: let error):
-                completion(nil, CustomError(description: error))
-            }
-        }
+        let db = TimelineDB()
+        let events = db.getEvents(for: self.id)
+        let eventsModel = events.map { TimelineEventModel(id: $0.id, relatedEventId: 0, title: $0.title) }
+        
+        completion(eventsModel , nil)
     }
- 
+    
 }
 

@@ -1,31 +1,22 @@
 import RealmSwift
+import Realm
 
-public class TimelineEventEntity: Object {
-     @objc dynamic var id = 0
-     @objc dynamic var title = ""
+public final class TimelineEventEntity: Object, RealmEntity {
+    public typealias EntityType = TimelineEventModel
     
-    public convenience init(id: Int, title: String) {
+    @objc dynamic var id = 0
+    @objc dynamic var title = ""
+    
+    public convenience init(event: EntityType) {
         self.init()
-        self.id = id
-        self.title = title
+        self.id = event.id
+        self.title = event.title
+    }
+
+    public var entity: EntityType {
+        return EntityType(id: self.id,
+                          relatedEventId: 0,
+                          title: self.title)
     }
     
-    class func save(events: [TimelineEventModel]) {
-        let realm = try! Realm()
-        
-        var eventsToSave: [TimelineEventEntity] = []
-        events.forEach { event in
-            let event = TimelineEventEntity(id: event.id, title: event.title)
-            eventsToSave.append(event)
-        }
-        
-        try! realm.write {
-            realm.add(eventsToSave)
-        }
-    }
-    
-    class func events() -> Results<TimelineEventEntity> {
-        let realm = try! Realm()
-        return realm.objects(TimelineEventEntity.self)
-    }
 }

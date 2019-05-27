@@ -81,7 +81,7 @@ private class TimelineDBSpy: TimelineDBContract {
     }
     
     func getEvents(for id: Int) -> [TimelineEventEntity] {
-        return hasOfflineData ? [TimelineEventEntity(id: 0, title: "title value")] : []
+        return hasOfflineData ? [TimelineEventEntity(event: TimelineEventModel(id: 0, relatedEventId: 0, title: ""))] : []
     }
     
 }

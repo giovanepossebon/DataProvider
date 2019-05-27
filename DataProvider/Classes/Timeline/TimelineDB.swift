@@ -7,7 +7,8 @@ public protocol TimelineDBContract {
 final class TimelineDB: TimelineDBContract {
     
     func getEvents(for id: Int) -> [TimelineEventEntity] {
-        return Array(TimelineEventEntity.events())
+        let timelineRepo = RealmRepository<TimelineEventEntity>()
+        return timelineRepo.all().map { TimelineEventEntity(event: $0) }
     }
     
 }
