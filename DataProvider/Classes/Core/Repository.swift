@@ -1,10 +1,10 @@
 import RealmSwift
 
 public protocol Repository {
-    associatedtype EntityType
+    associatedtype EntityType: Object
     
     init(realm: Realm)
-    func all() -> [EntityType]
+    func all() -> Results<EntityType>?
     func insert(item: EntityType)
 }
 
@@ -17,13 +17,13 @@ public class RealmRepository<T>: Repository where T: RealmEntity, T: Object, T.E
         self.realm = realm
     }
     
-    public func insert(item: T.EntityType) {
+    public func insert(item: T) {
         try? realm.write {
-            realm.add(Object(value: item))
+            realm.add(item)
         }
     }
     
-    public func all() -> [T.EntityType] {
-        return realm.objects(T.self).compactMap { $0.entity }
+    public func all() -> Results<EntityType>? {
+        return realm.objects(EntityType.self)
     }
 }

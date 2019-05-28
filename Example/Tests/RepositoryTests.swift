@@ -12,8 +12,7 @@ final class RepositoryTests: QuickSpec {
             var testRealm: Realm!
             
             beforeEach{
-                let objectTypes = [PetEntity.self]
-                testRealm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "pet-realm", objectTypes: objectTypes))
+                testRealm = try! Realm(configuration: Realm.Configuration(inMemoryIdentifier: "pet-realm"))
             }
             
             afterEach {
@@ -26,12 +25,25 @@ final class RepositoryTests: QuickSpec {
                 expect(testRealm.objects(PetEntity.self).count).to(equal(0))
                 
                 let pet = Pet(name: "Chewie", age: 6)
+                
                 let repo = RealmRepository<PetEntity>(realm: testRealm)
-                repo.insert(item: pet)
+                repo.insert(item: PetEntity(entity: pet))
                 
                 expect(testRealm.objects(PetEntity.self).count).to(equal(1))
                 expect(testRealm.objects(PetEntity.self).first?.name) == "Chewie"
                 expect(testRealm.objects(PetEntity.self).first?.age) == 6
+            }
+            
+            it("it get all pets in Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                
+                let pet = Pet(name: "Chewie", age: 6)
+                repo.insert(item: PetEntity(entity: pet))
+                repo.insert(item: PetEntity(entity: pet))
+                
+                expect(repo.all()?.count).to(equal(2))
             }
             
         }
@@ -40,26 +52,6 @@ final class RepositoryTests: QuickSpec {
     
 }
 
-class PetEntity: Object, RealmEntity {
-    typealias EntityType = Pet
-    
-    dynamic var name = ""
-    dynamic var age = 0
-    
-    public convenience init(entity: EntityType) {
-        self.init()
-        self.name = entity.name
-        self.age = entity.age
-    }
-    
-    var entity: Pet {
-        return Pet(name: self.name,
-                   age: self.age)
-    }
-    
-}
 
-struct Pet: Entity {
-    let name: String
-    let age: Int
-}
+
+
