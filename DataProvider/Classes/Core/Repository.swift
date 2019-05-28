@@ -9,7 +9,13 @@ public protocol Repository {
     func all() -> [Entity.EntityType]
     func findByPrimaryKey(_ id: Any) -> Entity.EntityType?
     func insert(item: EntityType)
+    
+    // updateByPrimaryKey
+    // deleteAll
+    // insert (array)
 }
+
+// DISCUSSION: background transactions working with completions
 
 public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     public typealias Entity = T
