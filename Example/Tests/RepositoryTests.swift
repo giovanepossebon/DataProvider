@@ -43,7 +43,7 @@ final class RepositoryTests: QuickSpec {
                 repo.insert(item: PetEntity(entity: pet))
                 repo.insert(item: PetEntity(entity: pet))
                 
-                expect(repo.all()?.count).to(equal(2))
+                expect(repo.all().count).to(equal(2))
             }
             
         }
