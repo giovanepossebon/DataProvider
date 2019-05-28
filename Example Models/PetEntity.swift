@@ -4,6 +4,7 @@ import RealmSwift
 public class PetEntity: Object, RealmEntity {
     public typealias EntityType = Pet
     
+    @objc public dynamic var id = UUID().uuidString
     @objc public dynamic var name = ""
     @objc public dynamic var age = 0
     
@@ -14,8 +15,13 @@ public class PetEntity: Object, RealmEntity {
     }
     
     public var entity: Pet {
-        return Pet(name: self.name,
+        return Pet(id: id,
+                   name: self.name,
                    age: self.age)
+    }
+    
+    override public static func primaryKey() -> String? {
+        return "id"
     }
     
 }

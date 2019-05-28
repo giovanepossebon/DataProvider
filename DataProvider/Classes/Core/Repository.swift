@@ -7,6 +7,7 @@ public protocol Repository {
     init(realm: Realm)
     
     func all() -> [Entity.EntityType]
+    func findByPrimaryKey(_ id: Any) -> Entity.EntityType?
     func insert(item: EntityType)
 }
 
@@ -27,5 +28,9 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     
     public func all() -> [T.EntityType] {
         return realm.objects(Entity.self).compactMap { $0.entity }
+    }
+    
+    public func findByPrimaryKey(_ id: Any) -> T.EntityType? {
+        return realm.object(ofType: Entity.self, forPrimaryKey: id)?.entity
     }
 }

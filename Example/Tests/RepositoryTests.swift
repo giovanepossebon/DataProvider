@@ -24,7 +24,7 @@ final class RepositoryTests: QuickSpec {
             it("it adds a pet to the Realm") {
                 expect(testRealm.objects(PetEntity.self).count).to(equal(0))
                 
-                let pet = Pet(name: "Chewie", age: 6)
+                let pet = Pet(id: "1", name: "Chewie", age: 6)
                 
                 let repo = RealmRepository<PetEntity>(realm: testRealm)
                 repo.insert(item: PetEntity(entity: pet))
@@ -39,13 +39,49 @@ final class RepositoryTests: QuickSpec {
                 
                 let repo = RealmRepository<PetEntity>(realm: testRealm)
                 
-                let pet = Pet(name: "Chewie", age: 6)
+                let pet = Pet(id: "1", name: "Chewie", age: 6)
+                let pet2 = Pet(id: "2", name: "Luke", age: 3)
                 repo.insert(item: PetEntity(entity: pet))
-                repo.insert(item: PetEntity(entity: pet))
+                repo.insert(item: PetEntity(entity: pet2))
                 
                 expect(repo.all().count).to(equal(2))
             }
             
+            describe("getting results with primary key from realm") {
+                
+                context("and there is a result with primary key") {
+                    
+                    it("it should get pet by primary key in Realm") {
+                        expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                        
+                        let repo = RealmRepository<PetEntity>(realm: testRealm)
+                        
+                        let pet = Pet(id: "3", name: "Han", age: 4)
+                        let petEntity = PetEntity(entity: pet)
+                        repo.insert(item: petEntity)
+                        
+                        expect(repo.findByPrimaryKey(petEntity.id)).toNot(beNil())
+                        expect(repo.findByPrimaryKey(petEntity.id)?.name) == "Han"
+                    }
+                    
+                }
+                
+                context("and there's no result with primary key") {
+                    
+                    it("it shouldn't get any pet in Realm") {
+                        expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                        
+                        let repo = RealmRepository<PetEntity>(realm: testRealm)
+                        
+                        let pet = Pet(id: "3", name: "Han", age: 4)
+                        let petEntity = PetEntity(entity: pet)
+                        repo.insert(item: petEntity)
+                        
+                        expect(repo.findByPrimaryKey("wrong")).to(beNil())
+                    }
+                    
+                }
+            }
         }
         
     }
