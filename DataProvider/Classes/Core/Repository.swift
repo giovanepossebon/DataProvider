@@ -33,7 +33,7 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     
     public func insert(item: T, completion: ((Bool, String?) -> Void)?) {
         do {
-            try realm.write {
+            try realm.safeWrite {
                 realm.add(item)
             }
         } catch {
@@ -46,20 +46,20 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     public func insert(items: [T], completion: ((Bool, String?) -> Void)?) {
         items.forEach { item in
             do {
-                try realm.write {
+                try realm.safeWrite {
                     realm.add(item)
                 }
             } catch {
                 completion?(false, error.localizedDescription)
             }
-            
-            completion?(true, nil)
         }
+        
+        completion?(true, nil)
     }
     
     public func update(item: T, completion: ((Bool, String?) -> Void)?) {
         do {
-            try realm.write {
+            try realm.safeWrite {
                 realm.add(item, update: true)
             }
         } catch {
@@ -86,7 +86,7 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
         
         result.forEach { item in
             do {
-                try realm.write {
+                try realm.safeWrite {
                     realm.delete(item)
                 }
             } catch {
@@ -95,5 +95,15 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
         }
         
         completion?(true, nil)
+    }
+}
+
+extension Realm {
+    public func safeWrite(_ block: (() throws -> Void)) throws {
+        if isInWriteTransaction {
+            try block()
+        } else {
+            try write(block)
+        }
     }
 }

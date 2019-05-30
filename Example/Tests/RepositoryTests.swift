@@ -71,6 +71,8 @@ final class RepositoryTests: QuickSpec {
                 repo.insert(items: pets.map { PetEntity(entity: $0) }, completion: nil)
                 expect(testRealm.objects(PetEntity.self).count).to(equal(5))
                 
+                sleep(1) // Waiting for write transactions to validate
+                
                 repo.deleteAll(completion: nil)
                 expect(testRealm.objects(PetEntity.self).count).to(equal(0))
             }
