@@ -1,5 +1,6 @@
 import DataProvider
 import RealmSwift
+import Fakery
 
 public class PetEntity: Object, RealmEntity {
     public typealias EntityType = Pet
@@ -10,14 +11,22 @@ public class PetEntity: Object, RealmEntity {
     
     public convenience init(entity: EntityType) {
         self.init()
+        self.id = entity.id
         self.name = entity.name
         self.age = entity.age
     }
     
     public var entity: Pet {
         return Pet(id: id,
-                   name: self.name,
-                   age: self.age)
+                   name: name,
+                   age: age)
+    }
+    
+    public static var mock: Pet {
+        let faker = Faker()
+        return Pet(id: faker.lorem.word(),
+                   name: faker.name.firstName(),
+                   age: faker.number.randomInt(min: 0, max: 12))
     }
     
     override public static func primaryKey() -> String? {

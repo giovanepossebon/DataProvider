@@ -20,6 +20,7 @@ TODO: Add long description of the pod here.
   s.swift_version = '5.0'
   
   s.dependency 'RealmSwift'
+  s.dependency 'Fakery'
   
   s.source_files = 'DataProvider/Classes/**/*'
   

@@ -27,11 +27,67 @@ final class RepositoryTests: QuickSpec {
                 let pet = Pet(id: "1", name: "Chewie", age: 6)
                 
                 let repo = RealmRepository<PetEntity>(realm: testRealm)
-                repo.insert(item: PetEntity(entity: pet))
+                repo.insert(item: PetEntity(entity: pet), completion: nil)
                 
                 expect(testRealm.objects(PetEntity.self).count).to(equal(1))
                 expect(testRealm.objects(PetEntity.self).first?.name) == "Chewie"
                 expect(testRealm.objects(PetEntity.self).first?.age) == 6
+            }
+            
+            it("it edit a pet in the Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let pet = PetEntity.mock
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                repo.insert(item: PetEntity(entity: pet), completion: nil)
+                
+                expect(testRealm.objects(PetEntity.self).count).to(equal(1))
+                
+                let petToEdit = repo.findResults(pet.id)
+                
+                guard let oldPet = petToEdit.first else {
+                    fail("cant find any pet")
+                    return
+                }
+                
+                let newPet = Pet(id: oldPet.id, name: "Chewie", age: oldPet.age)
+                
+                repo.update(item: PetEntity(entity: newPet), completion: nil)
+                
+                expect(testRealm.objects(PetEntity.self).count).to(equal(1))
+                expect(testRealm.objects(PetEntity.self).first?.name) == "Chewie"
+            }
+            
+            it("it deletes all objects from the Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                
+                var pets: [Pet] = []
+                for _ in 1...5 {
+                    pets.append(PetEntity.mock)
+                }
+                
+                repo.insert(items: pets.map { PetEntity(entity: $0) }, completion: nil)
+                expect(testRealm.objects(PetEntity.self).count).to(equal(5))
+                
+                repo.deleteAll(completion: nil)
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+            }
+            
+            it("it adds an array of pets to the Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                
+                var pets: [Pet] = []
+                for _ in 1...5 {
+                    pets.append(PetEntity.mock)
+                }
+                
+                repo.insert(items: pets.map { PetEntity(entity: $0) }, completion: nil)
+                
+                expect(testRealm.objects(PetEntity.self).count).to(equal(5))
             }
             
             it("it get all pets in Realm") {
@@ -41,8 +97,8 @@ final class RepositoryTests: QuickSpec {
                 
                 let pet = Pet(id: "1", name: "Chewie", age: 6)
                 let pet2 = Pet(id: "2", name: "Luke", age: 3)
-                repo.insert(item: PetEntity(entity: pet))
-                repo.insert(item: PetEntity(entity: pet2))
+                repo.insert(item: PetEntity(entity: pet), completion: nil)
+                repo.insert(item: PetEntity(entity: pet2), completion: nil)
                 
                 expect(repo.all().count).to(equal(2))
             }
@@ -58,10 +114,10 @@ final class RepositoryTests: QuickSpec {
                         
                         let pet = Pet(id: "3", name: "Han", age: 4)
                         let petEntity = PetEntity(entity: pet)
-                        repo.insert(item: petEntity)
+                        repo.insert(item: petEntity, completion: nil)
                         
-                        expect(repo.findByPrimaryKey(petEntity.id)).toNot(beNil())
-                        expect(repo.findByPrimaryKey(petEntity.id)?.name) == "Han"
+                        expect(repo.find(petEntity.id)).toNot(beNil())
+                        expect(repo.find(petEntity.id)?.name) == "Han"
                     }
                     
                 }
@@ -75,9 +131,9 @@ final class RepositoryTests: QuickSpec {
                         
                         let pet = Pet(id: "3", name: "Han", age: 4)
                         let petEntity = PetEntity(entity: pet)
-                        repo.insert(item: petEntity)
+                        repo.insert(item: petEntity, completion: nil)
                         
-                        expect(repo.findByPrimaryKey("wrong")).to(beNil())
+                        expect(repo.find("wrong")).to(beNil())
                     }
                     
                 }

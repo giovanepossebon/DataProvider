@@ -1,6 +1,8 @@
 PODS:
   - DataProvider (0.1.1):
+    - Fakery
     - RealmSwift
+  - Fakery (4.0.0)
   - Nimble (8.0.1)
   - Quick (2.1.0)
   - Realm (3.15.0):
@@ -16,6 +18,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Fakery
     - Nimble
     - Quick
     - Realm
@@ -26,7 +29,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DataProvider: 2b0ea1a8e01cca6b1cd883509d5c02caad648c64
+  DataProvider: c3399d82c11bb4785e39145996bfe141f235a27d
+  Fakery: 476f6d947de432f84703acc830a1e7166330299b
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   Realm: 9b834e1be6062f544805252c812348872dc5d4ed
