@@ -77,6 +77,21 @@ final class RepositoryTests: QuickSpec {
                 expect(testRealm.objects(PetEntity.self).count).to(equal(0))
             }
             
+            it("it deletes an object from the Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                
+                let pet = Pet(id: "2", name: "Luke", age: 3)
+                repo.insert(item: PetEntity(entity: pet), completion: nil)
+                expect(testRealm.objects(PetEntity.self).count).to(equal(1))
+                
+                sleep(1) // Waiting for write transactions to validate
+                
+                repo.delete("2", completion: nil)
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+            }
+            
             it("it adds an array of pets to the Realm") {
                 expect(testRealm.objects(PetEntity.self).count).to(equal(0))
                 
@@ -103,6 +118,22 @@ final class RepositoryTests: QuickSpec {
                 repo.insert(item: PetEntity(entity: pet2), completion: nil)
                 
                 expect(repo.all().count).to(equal(2))
+            }
+            
+            it("it finds pets with a filter in Realm") {
+                expect(testRealm.objects(PetEntity.self).count).to(equal(0))
+                
+                let repo = RealmRepository<PetEntity>(realm: testRealm)
+                
+                let pet = Pet(id: "1", name: "Chewie", age: 6)
+                let pet2 = Pet(id: "2", name: "Luke", age: 3)
+                repo.insert(item: PetEntity(entity: pet), completion: nil)
+                repo.insert(item: PetEntity(entity: pet2), completion: nil)
+                
+                expect(repo.all().count).to(equal(2))
+                
+                let chewie = repo.findResults(NSPredicate(format: "name = %@", "Chewie"))
+                expect(chewie.first?.id) == "1"
             }
             
             describe("getting results with primary key from realm") {
