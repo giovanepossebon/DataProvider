@@ -4,12 +4,12 @@ public protocol Repository {
     associatedtype Entity: Object, RealmEntity
     associatedtype EntityType = Entity.EntityType
     
-    init(realm: Realm)
-    
-    func all() -> [Entity.EntityType]
-    func find(_ id: Any) -> Entity.EntityType?
-    func findResults(_ id: Any) -> Results<Entity>
-    func findResults(_ query: NSPredicate) -> [Entity.EntityType]
+    init(realmConfiguration: Realm.Configuration)
+        
+    func all(completion: @escaping([Entity.EntityType]) -> Void)
+    func find(_ id: Any, completion: @escaping(Entity.EntityType?) -> Void)
+    func findResults(completion: @escaping(Results<Entity>?) -> Void)
+    func findResults(_ query: NSPredicate, completion: @escaping([Entity.EntityType]) -> Void)
     func insert(item: EntityType, completion: ((_ : Bool, _ error: String?) -> Void)?)
     func insert(items: [EntityType], completion: ((_ : Bool, _ error: String?) -> Void)?)
     func update(item: EntityType, completion: ((_ : Bool, _ error: String?) -> Void)?)
@@ -23,97 +23,161 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     
     public typealias Entity = T
     
-    private let realm: Realm
+    private let realmConfiguration: Realm.Configuration
     
-    public required init(realm: Realm) {
-        self.realm = realm
+    public let realm: Realm
+    
+    let background = { (block: @escaping () -> Void) in
+        DispatchQueue.global(qos: .background).async(execute: block)
+    }
+    
+    public required init(realmConfiguration: Realm.Configuration) {
+        self.realmConfiguration = realmConfiguration
+        self.realm = try! Realm(configuration: realmConfiguration)
     }
     
     public func insert(item: T, completion: ((Bool, String?) -> Void)?) {
-        do {
-            try realm.safeWrite {
-                realm.add(item)
-            }
-        } catch {
-            completion?(false, error.localizedDescription)
-        }
-        
-        completion?(true, nil)
-    }
-    
-    public func insert(items: [T], completion: ((Bool, String?) -> Void)?) {
-        items.forEach { item in
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
             do {
+                let realm = try Realm(configuration: self.realmConfiguration)
                 try realm.safeWrite {
                     realm.add(item)
                 }
+                
+                completion?(true, nil)
             } catch {
                 completion?(false, error.localizedDescription)
             }
         }
-        
-        completion?(true, nil)
+    }
+    
+    public func insert(items: [T], completion: ((Bool, String?) -> Void)?) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                try realm.safeWrite {
+                    items.forEach { realm.add($0) }
+                }
+                
+                completion?(true, nil)
+            } catch {
+                completion?(false, error.localizedDescription)
+            }
+        }
     }
     
     public func update(item: T, completion: ((Bool, String?) -> Void)?) {
-        do {
-            try realm.safeWrite {
-                realm.add(item, update: true)
-            }
-        } catch {
-            completion?(false, error.localizedDescription)
-        }
-        
-        completion?(true, nil)
-    }
-    
-    public func all() -> [T.EntityType] {
-        return realm.objects(Entity.self).compactMap { $0.entity }
-    }
-    
-    public func find(_ id: Any) -> T.EntityType? {
-        return realm.object(ofType: Entity.self, forPrimaryKey: id)?.entity
-    }
-    
-    public func findResults(_ id: Any) -> Results<T> {
-        return realm.objects(Entity.self)
-    }
-    
-    public func findResults(_ query: NSPredicate) -> [T.EntityType] {
-        return realm.objects(Entity.self).filter(query).map { $0.entity }
-    }
-    
-    public func deleteAll(completion: ((Bool, String?) -> Void)?) {
-        let result = realm.objects(Entity.self)
-        
-        result.forEach { item in
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
             do {
+                let realm = try Realm(configuration: self.realmConfiguration)
                 try realm.safeWrite {
-                    realm.delete(item)
+                    realm.add(item, update: true)
                 }
+                
+                completion?(true, nil)
             } catch {
                 completion?(false, error.localizedDescription)
             }
         }
-        
-        completion?(true, nil)
+    }
+    
+    public func all(completion: @escaping ([T.EntityType]) -> Void) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                completion(realm.objects(Entity.self).compactMap { $0.entity } ?? [])
+            } catch {
+                completion([])
+            }
+        }
+    }
+    
+    public func find(_ id: Any, completion: @escaping (T.EntityType?) -> Void) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                completion(realm.object(ofType: Entity.self, forPrimaryKey: id)?.entity)
+            } catch {
+                completion(nil)
+            }
+        }
+    }
+    
+    public func findResults(_ query: NSPredicate, completion: @escaping ([T.EntityType]) -> Void) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                completion(realm.objects(Entity.self).filter(query).map { $0.entity })
+            } catch {
+                completion([])
+            }
+        }
+    }
+    
+    public func findResults(completion: @escaping (Results<T>?) -> Void) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                completion(realm.objects(EntityType.self))
+            } catch {
+                completion(nil)
+            }
+        }
+    }
+    
+    public func deleteAll(completion: ((Bool, String?) -> Void)?) {
+        background { [weak self] in
+            guard let `self` = self else { return }
+            
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                try realm.safeWrite {
+                    realm.deleteAll()
+                }
+                
+                completion?(true, nil)
+            } catch {
+                completion?(false, error.localizedDescription)
+            }
+        }
+
     }
 
     public func delete(_ id: Any, completion: ((Bool, String?) -> Void)?) {
-        guard let result = realm.object(ofType: Entity.self, forPrimaryKey: id) else {
-            completion?(false, "There are no entities with \(id) primary key")
-            return
-        }
-        
-        do {
-            try realm.safeWrite {
-                realm.delete(result)
+        background { [weak self] in
+            guard let `self` = self else { return }
+
+            do {
+                let realm = try Realm(configuration: self.realmConfiguration)
+                
+                guard let result = realm.object(ofType: Entity.self, forPrimaryKey: id) else {
+                    completion?(false, "There are no entities with \(id) primary key")
+                    return
+                }
+                
+                try realm.safeWrite {
+                    realm.delete(result)
+                }
+                
+                completion?(true, nil)
+            } catch {
+                completion?(false, error.localizedDescription)
             }
-        } catch {
-            completion?(false, error.localizedDescription)
         }
-        
-        completion?(true, nil)
     }
 }
 
