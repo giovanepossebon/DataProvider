@@ -24,7 +24,7 @@ public class PetEntity: Object, RealmEntity {
     
     public static var mock: Pet {
         let faker = Faker()
-        return Pet(id: faker.lorem.word(),
+        return Pet(id: UUID().uuidString,
                    name: faker.name.firstName(),
                    age: faker.number.randomInt(min: 0, max: 12))
     }
