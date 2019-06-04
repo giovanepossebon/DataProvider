@@ -9,8 +9,6 @@ final class RepositoryTests: QuickSpec {
         
         describe("RepositoryTests") {
             
-            var repo: RealmRepository<PetEntity>!
-            
             describe("Adding pet to the Realm") {
                 
                 it("it should add a pet to the Realm") {
