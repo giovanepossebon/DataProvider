@@ -25,15 +25,12 @@ public class RealmRepository<T>: Repository where T: Object, T: RealmEntity {
     
     private let realmConfiguration: Realm.Configuration
     
-    public let realm: Realm
-    
     let background = { (block: @escaping () -> Void) in
         DispatchQueue.global(qos: .background).async(execute: block)
     }
     
     public required init(realmConfiguration: Realm.Configuration) {
         self.realmConfiguration = realmConfiguration
-        self.realm = try! Realm(configuration: realmConfiguration)
     }
     
     public func insert(item: T, completion: ((Bool, String?) -> Void)?) {
